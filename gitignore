@@ -1,0 +1,8 @@
+# Không commit file backup chứa dữ liệu cá nhân
+todo_backup_*.json
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
