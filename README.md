@@ -2,6 +2,15 @@
 
 Backup và khôi phục dữ liệu Microsoft To Do (list, task, ghi chú, hạn, nhắc nhở, checklist con) thông qua Microsoft Graph API.
 
+## Lấy project về máy
+
+```bash
+git clone https://github.com/tuananh511/export-import-microsoft-todo.git
+cd export-import-microsoft-todo
+```
+
+(Nếu bạn đang phát triển trực tiếp trên máy đã có sẵn code này, bỏ qua bước này.)
+
 ## Cài đặt
 
 ```bash
