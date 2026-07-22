@@ -1,53 +1,50 @@
 # Export/Import Microsoft To Do
+> Sao lưu và khôi phục toàn bộ dữ liệu Microsoft To Do qua Microsoft Graph API.
 
-Backup và khôi phục dữ liệu Microsoft To Do (list, task, ghi chú, hạn, nhắc nhở, checklist con) thông qua Microsoft Graph API.
+![Release](https://img.shields.io/github/v/release/tuananh511/export-import-microsoft-todo?include_prereleases)
+![License](https://img.shields.io/github/license/tuananh511/export-import-microsoft-todo)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
 
-## Lấy project về máy
+## Overview
+Hai script Python độc lập giúp bạn sao lưu (export) và khôi phục (import) dữ liệu Microsoft To Do — bao gồm list, task, ghi chú, hạn, nhắc nhở và checklist con — thông qua Microsoft Graph API. Không cần tự đăng ký app trên Azure, không lưu secret hay token nào trên máy.
 
-```bash
+## Features
+- Xuất toàn bộ list và task ra file JSON có gắn timestamp (`todo_backup_YYYYMMDD_HHMMSS.json`)
+- Nhập lại dữ liệu từ file backup: tự động thêm vào list đã tồn tại (trùng tên) hoặc tạo list mới nếu chưa có
+- Đăng nhập qua device code flow bằng client ID public của Microsoft ("Microsoft Graph Command Line Tools"), không cần đăng ký app Azure riêng
+- Không lưu secret/token trên máy — mỗi lần chạy đều yêu cầu đăng nhập lại qua trình duyệt
+- `.gitignore` sẵn loại trừ file `todo_backup_*.json` để tránh lỡ commit dữ liệu cá nhân
+
+## Installation
+```
 git clone https://github.com/tuananh511/export-import-microsoft-todo.git
 cd export-import-microsoft-todo
-```
-
-(Nếu bạn đang phát triển trực tiếp trên máy đã có sẵn code này, bỏ qua bước này.)
-
-## Cài đặt
-
-```bash
 pip install msal requests
 ```
 
-## Export (backup)
-
-```bash
+## Usage
+**Export (backup):**
+```
 python export_todo.py
 ```
+- Script in ra một link kèm device code, ví dụ: `https://microsoft.com/devicelogin` + mã.
+- Mở link, đăng nhập bằng tài khoản Microsoft đang dùng To Do, nhập mã, chấp nhận quyền truy cập Tasks.
+- Toàn bộ list và task được lưu ra file `todo_backup_YYYYMMDD_HHMMSS.json` trong thư mục hiện tại.
+- Nên chạy export định kỳ để có nhiều bản backup theo thời gian (mỗi lần chạy tạo file mới, không đè file cũ).
 
-- Script sẽ in ra một link kèm mã đăng nhập (device code), ví dụ:
-  `To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code XXXXXXX`
-- Mở link đó, đăng nhập bằng tài khoản Microsoft đang dùng To Do, nhập mã, bấm **Accept** khi được hỏi quyền truy cập Tasks.
-- Sau khi đăng nhập, script tự lấy toàn bộ list và task, lưu ra file `todo_backup_YYYYMMDD_HHMMSS.json` trong thư mục hiện tại.
-
-Nên chạy export định kỳ để có nhiều bản backup theo thời gian (mỗi lần chạy tạo 1 file mới, không đè lên file cũ).
-
-## Import (khôi phục)
-
-```bash
+**Import (khôi phục):**
+```
 python import_todo.py todo_backup_20260706_101500.json
 ```
-
 - Đăng nhập tương tự như export.
-- Với mỗi list trong file backup:
-  - Nếu list đó **đã tồn tại** (trùng tên) trong tài khoản đang đăng nhập → thêm task vào list đó.
-  - Nếu **chưa có** → tạo list mới rồi thêm task vào.
-- Mỗi task được tạo lại là task **mới** (Microsoft không cho giữ nguyên ID cũ).
+- Với mỗi list trong file backup: nếu đã tồn tại (trùng tên) → thêm task vào list đó; nếu chưa có → tạo list mới rồi thêm task.
 
-⚠️ **Lưu ý:** Chạy import nhiều lần trên cùng 1 file backup + cùng 1 list sẽ tạo task **trùng lặp** (không tự phát hiện task đã tồn tại). Chỉ nên import khi list đó đang trống hoặc khi bạn thực sự muốn khôi phục lại từ đầu.
+⚠️ **Lưu ý:** Import nhiều lần trên cùng 1 file + cùng 1 list sẽ tạo task **trùng lặp** (script không tự phát hiện task đã tồn tại). Chỉ nên import khi list đang trống hoặc khi thực sự muốn khôi phục lại từ đầu.
 
-## Xác thực
+## Roadmap
+- [ ] Phát hiện và bỏ qua task trùng lặp khi import
+- [ ] Đóng gói thành file thực thi (.exe) hoặc CLI có thể cài qua pip
+- [ ] Thêm CI (GitHub Actions) để kiểm tra script tự động
 
-Hai script dùng **client ID public của Microsoft** ("Microsoft Graph Command Line Tools"), không cần tự đăng ký app trên Azure. Không có secret hay token nào được lưu lại trên máy — mỗi lần chạy đều cần đăng nhập lại qua trình duyệt.
-
-## Bảo mật khi đưa lên GitHub
-
-File `.gitignore` đã loại trừ các file `todo_backup_*.json` để tránh lỡ commit dữ liệu task cá nhân của bạn. Không có API key hay secret nào trong code, an toàn để public repo.
+## License
+MIT
