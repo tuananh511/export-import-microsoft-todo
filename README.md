@@ -48,3 +48,15 @@ python import_todo.py todo_backup_20260706_101500.json
 
 ## License
 MIT
+
+## Giao diện (GUI)
+
+Không muốn gõ lệnh? Dùng bản có giao diện bấm-chạy:
+
+- **Tải bản .exe:** vào [Releases](https://github.com/tuananh511/export-import-microsoft-todo/releases), tải `TodoBackup.exe` rồi bấm đúp để chạy. Nếu Windows SmartScreen cảnh báo, chọn *More info → Run anyway* (file chưa được ký số).
+- **Hoặc chạy từ source:**
+  ```
+  uv run --with msal --with requests --with pyside6 todo_gui.py
+  ```
+
+Bấm **Export** để sao lưu, **Import** để khôi phục. Đăng nhập qua trình duyệt, token chỉ nằm trong RAM và không lưu ra đĩa.
